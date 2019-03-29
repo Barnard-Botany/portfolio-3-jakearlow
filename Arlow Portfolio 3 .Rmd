@@ -1,0 +1,305 @@
+---
+title: "3.1: R for Phylogenies: Introduction"
+output: html_notebook
+
+Jake Arlow
+
+---
+
+
+
+```{r}
+#install.packages(ape)
+#install.packages("devtools")
+#devtools::install_github("ropensci/brranching")
+library("ape")
+#library("brranching")
+```
+
+EXERCISES FOR CLASS:
+
+##Phylogenies
+
+
+
+```{r}
+newick_str = "(((Humans, Chimps), Gorillas), Orangs);"
+#Here, we are defining a character variable. 
+tr_primates = read.tree(text=newick_str)
+#Now, with the command "read.tree" from the Package APE, we are converting that simple character variable by reading it as a tree, also known as a phylo object. The function in APE is going to understand not only that there are four "tip taxa" but also that the structure of the parenthesis is meaningful as a hypothesis about their evolutionary relationship, and at the same time the information needed to connect them into a tree diagram with three nodes (which are ancestral taxa to these tip taxa). Before you run the code, think about what the phylogenetic tree should look like, basedo n what you know about these four taxa and about what you know about the code. 
+plot(tr_primates)
+#This last line simply plotted the object as a tree. More about this below. 
+```
+
+
+### MINI EXERCISE 1: Understanding Newick and Phylo Objects
+
+As an alternative to using the R Studio window at top right, instead write and submit a few commands such as
+
+tr_primates
+```{r}
+tr_primates
+```
+For tr_primates, we're given information on the tip taxa and the node taxa. 
+
+
+```{r}
+str("tr_primates")
+```
+
+and
+
+
+```{r}
+attributes(tr_primates)
+```
+
+
+```{r}
+names(tr_primates) 
+```
+This gives us info about the characters of the tree.
+
+
+```{r}
+newick_str = "(((Humans, Orangs), Chimps), Gorillas);"
+tr_primates = read.tree(text=newick_str)
+plot(tr_primates)
+```
+
+
+
+
+## Tip and Node Structure in Phylogenies Imply a Hypothesis: Simple Botanical Examples
+
+
+
+```{r}
+newick_str = "(((Cabbage, Corn), Kale), Wheat);"
+tr_plants = read.tree(text=newick_str)
+plot(tr_plants)
+```
+
+
+
+```{r}
+newick_str = "(Wheat,(Corn,(Cabbage, Kale)));"
+tr2_plants = read.tree(text=newick_str)
+plot(tr2_plants)
+```
+
+## MINI-EXERCISE 2
+
+1. Copy, paste and re-write a chunk of code (or write it fresh): write a new Newick tree as as string variable, read it as a tree, and plot it. Make sure it is consistent with 2018 botanical knowledge about these four taxa. You may need to modify topology.
+
+```{r}
+newick_str = "(Wheat,(Corn,(Cabbage, Kale)));"
+tr2_plants = read.tree(text=newick_str)
+plot(tr2_plants)
+```
+
+
+
+```{r}
+newick_str = "(Sequoia,(Wheat,(Corn,(Cabbage, Kale))));"
+tr2_plants = read.tree(text=newick_str)
+plot(tr2_plants)
+```
+
+
+## Branching order and branching lengths
+
+Returning to the original tree, What was added to the tree and the plot of the tree?
+
+```{r}
+newick_str = "(((Humans:12.5, Chimps:12.5):1.0, Gorillas:14.0):1.0, Orangs:14.5):1.0;"
+tr_primate = read.tree(text=newick_str)
+plot(tr_primate)
+```
+
+What was added to the tree and the plot of the tree?
+
+```{r}
+newick_str = "(((Humans:6.0, Chimps:6.0)LCA_humans_chimps:1.0, Gorillas:7.0)LCA_w_gorillas:1.0, Orangs:8.0)LCA_w_orangs:1.0;"
+tr_primate = read.tree(text=newick_str)
+plot(tr_primate, show.node.label=TRUE)
+attributes(tr_primate)
+tr_primate
+```
+
+## MINI-EXERCISE 3
+
+In November 2017, scientists discovered that there are two Orang species, the known species Pongo abelii and the new species Pongo tapanuliensis. The two taxa are estimated to have separated about 3.5 million years ago. How would you modify the Newick portion of code above to show that there are two species? 
+
+```{r}
+newick_str = "(((Humans, Chimps), Gorillas), (Pongo_abelii, Pongo_tapanuliensis));"
+tr_primate = read.tree(text=newick_str)
+plot(tr_primate)
+```
+
+## Displaying Phylogenies
+
+### MINI EXERCISE 4
+
+Practice a few of these data display techniques using the six-taxon phylogeny that includes cabbage, kale, corn and wheat, plus radish and sequoia.
+
+
+```{r}
+plants_two = "(Sequoia, (Wheat,(Corn,(Cabbage, Kale, Radish))));"
+plants_two_tree = read.tree(text=plants_two)
+
+plot(plants_two_tree, type="fan")
+plot(plants_two_tree, type="cladogram")
+plot(plants_two_tree, type="radial")
+plot(plants_two_tree, type="unrooted")
+```
+
+#### MINI-EXERCISE 5
+
+Do and write up notes about two things:
+
+1. Try generating these trees again, but change from cladogram to phylogram, or to another format for the tree. 
+
+```{r}
+# storing data
+EG<-c("Abies",
+"Ailanthus",
+"Aspicllum",
+"Atragene",
+"Bangia",
+"Begonia",
+"Berberis",
+"Betula",
+"Blasia",
+"Blechnum",
+"Caulerpa",
+"Ceratophyllum",
+"Chenopodium",
+"Clematis",
+"Cocculus",
+"Corallorrhiza",
+"Corchorus",
+"Cucurbita",
+"Dahlia",
+"Dioscorea",
+"Dracaena",
+"Equisetum",
+"Euonymus",
+"Euphorbia",
+"Fagus",
+"Ficus",
+"Fontinalis",
+"Fossombronia",
+"Fritillaria",
+"Fucus",
+"Gleditschia",
+"Gleocapsa",
+"Haplomitrium",
+"Hedera",
+"Helianthus",
+"Heterocentron",
+"Hippuris",
+"Hypoderma",
+"Isoetes",
+"Linum",
+"Liquidambar",
+"Marchantia",
+"Momordica",
+"Monopodium",
+"Mucor",
+"Nerium",
+"Nitella",
+"Osmunda",
+"Pandanus",
+"Papaver",
+"Pelargonium",
+"Phlomis",
+"Phytolacca",
+"Pinus",
+"Platanus",
+"Polytrichum",
+"Populus",
+"Potamogeton",
+"Punctum",
+"Quercus",
+"Ricinus",
+"Rubus",
+"Salix",
+"Sambucus",
+"Sclerotium",
+"Selaginella",
+"Sempervivum",
+"Sponia",
+"Stypocaulon",
+"Sympodium",
+"Taxodium",
+"Tecoma",
+"Tradescantia",
+"Urtica",
+"Viola",
+"Vitis",
+"Wisteria",
+"Yucca")
+
+EG_tree <- phylomatic(taxa = EG, get = 'POST')
+write.tree(EG_tree, file="eg_tree_stuff")
+# cladogram 
+plot(EG_tree, no.margin = TRUE, type="cladogram")
+# phylogram 
+plot(EG_tree, no.margin = TRUE, type="phylogram")
+```
+
+
+2. Then, looking at all your output, what differs most noticably between the pair of trees, and how/why does this relate to the stored tree used to generate them? Try to explain what this means in your own words. 
+
+Cladograms only show the shape of a tree/the possible evolutionary relationships of the organisms on it, while phylogenies use branch length to show the amount of change in a character. 
+
+3. Lastly, look at the output and you'll see that many taxa were excluded. Try looking them up in EOL or Wikipedia. Why was it difficult to include them? What does this say about the history of botany? Are there some things that were excluded that should not have been excluded?  
+
+Some taxa weren't included because they are not the proper scientific names. The plant "Aspicllum" only yielded two google results. TWO! For comparison, I typed in the phrase "I love plants," which yielded 650 million results. The list isn't clean, and R/the package creating this tree must not have had some of these out of date plant names available in its database so it didn't add them to the tree.
+
+
+#### FINAL EXERCISE
+
+I'm using my cleaned Welikia and Plant-o-Matic lists from Portfolio 2. Here R is reading the csv files of the two lists and extracting the scientific names:
+
+```{r}
+welikia_list = read.csv("welikia.csv")
+omatic_list = read.csv("plant_o_matic.csv")
+welikia_species = paste(welikia_list$Scientific.Name)
+omatic_species = paste(used_list$Scientific.Name)
+
+welikia_species
+omatic_species
+```
+
+Making phylogenetic trees from the species lists using the phylomatic() method and plotting the trees:
+
+```{r}
+welikia <- phylomatic(taxa = welikia_species, get = 'POST')
+plot(welikia, no.margin = TRUE, type="phylogram")
+omatic <- phylomatic(taxa = omatic_species, get = 'POST')
+plot(omatic, no.margin = TRUE, type="phylogram")
+```
+
+Saving trees as PDF:
+
+```{r}
+welikia_fn = "welikia_tree.pdf"
+pdf(file=welikia_fn)
+plot(welikia, no.margin = TRUE, type="phylogram")
+dev.off()
+cmdstr = paste("open ", welikia_fn, sep="")
+system(cmdstr)
+
+omatic_fn = "plant_o_matic_tree.pdf"
+pdf(file=used_fn)
+plot(omatic, no.margin = TRUE, type="phylogram")
+dev.off()
+cmdstr = paste("open ", omatic_fn, sep="")
+system(cmdstr)
+```
+  
+
+
+
