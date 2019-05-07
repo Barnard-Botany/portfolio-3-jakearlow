@@ -267,7 +267,7 @@ I'm using my cleaned Welikia and Plant-o-Matic lists from Portfolio 2. Here R is
 welikia_list = read.csv("welikia.csv")
 omatic_list = read.csv("plant_o_matic.csv")
 welikia_species = paste(welikia_list$Scientific.Name)
-omatic_species = paste(used_list$Scientific.Name)
+omatic_species = paste(omatic_list$Scientific.Name)
 
 welikia_species
 omatic_species
@@ -293,13 +293,16 @@ cmdstr = paste("open ", welikia_fn, sep="")
 system(cmdstr)
 
 omatic_fn = "plant_o_matic_tree.pdf"
-pdf(file=used_fn)
+pdf(file=omatic_fn)
 plot(omatic, no.margin = TRUE, type="phylogram")
 dev.off()
 cmdstr = paste("open ", omatic_fn, sep="")
 system(cmdstr)
 ```
   
+# Everything worked great until the very end when you read in your csv files. On lines 269 and 270 you tried creating variables by using a `Scientific.Name` column, but there is no `Scientific.Name` column in either of the csv data frames that you pulled in. If you replace `Scientific.Name` with `Genus.Species` then everything should work. Replace lines 269-270 with this:
 
+welikia_species = paste(welikia_list$Genus.Species)
+omatic_species = paste(omatic_list$Genus.Species)
 
 
